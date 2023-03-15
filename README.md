@@ -49,7 +49,7 @@ If you use Ricoh Theta S, please check [our previous work](https://github.com/NH
 ExAug generates the velocity commands to go to the goal position from the current and subgoal image. Our code subscribes the subgoal image as "/topic_name_goal_image".
 By updating the subgoal image, you can control the robot toward the far goal position.
 
-#### Step5: Runing DVMPC
+#### Step5: Runing ExAug
 We can run our control policy as follows.
 
 python3 ExAug.py --camera "360" --rsize 0.3 --rsize_t 0.3
@@ -64,7 +64,7 @@ The codes provided on this page are published under the Creative Commons Attribu
 Citation
 =================
 
-If you use DVMPC's software or database, please cite:
+If you use ExAug's software or database, please cite:
 
 @article{hirose2022exaug,  
   title={ExAug: Robot-Conditioned Navigation Policies via Geometric Experience Augmentation},  
