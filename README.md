@@ -1,4 +1,4 @@
-# Deep Visual MPC-Policy Learning for Navigation
+# ExAug: Robot-Conditioned Navigation Policies via Geometric Experience Augmentation
  
 **Summary**: Our method, ExAug can realize the navigation with obstacle avoidance by only using an RGB image. Our control policy is trained from the synthetic images from multiple datasets by minimizing our proposed objectives. In this repository, we release our trained control policies for spherical camera image(double fisheye image), fisheye image(170 degree FOV) and narrow FOV camera. 
 
@@ -23,7 +23,9 @@ How to use ExAug
 =================
 
 #### Step1: Download
-https://github.com/NHirose/Control-Policy-ExAug.git
+Code: https://github.com/NHirose/Control-Policy-ExAug.git
+
+Trained Model: https://drive.google.com/drive/folders/1M2d7454caRXPzlXsnjZdEZLopdcndYkj?usp=share_link
 
 #### Step2: Camera Setup
 We release three control policies for following different three camera types:
@@ -64,10 +66,10 @@ Citation
 
 If you use DVMPC's software or database, please cite:
 
-@article{hirose2022exaug,
-  title={ExAug: Robot-Conditioned Navigation Policies via Geometric Experience Augmentation},
-  author={Hirose, Noriaki and Shah, Dhruv and Sridhar, Ajay and Levine, Sergey},
-  journal={arXiv preprint arXiv:2210.07450},
-  year={2022}
+@article{hirose2022exaug,  
+  title={ExAug: Robot-Conditioned Navigation Policies via Geometric Experience Augmentation},  
+  author={Hirose, Noriaki and Shah, Dhruv and Sridhar, Ajay and Levine, Sergey},  
+  journal={arXiv preprint arXiv:2210.07450},  
+  year={2022}  
 }
 
