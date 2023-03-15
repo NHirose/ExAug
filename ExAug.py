@@ -31,21 +31,23 @@ import numpy as np
 import math
 from datetime import date
 
-ini = 0
-#count_safe = 0
-#count = 0
-#Lpast = 1.0
-#vel_res = 0.0
-#wvel_res = 0.0
-#vel_ref = 0.0
-#wvel_ref = 0.0
-#Lth = 0.18
+import argparse
+parser = argparse.ArgumentParser()
+parser.add_argument('--camera', type=str, default="360", help="camera type, 360 or fisheye or rsense")
+parser.add_argument("--rsize", type=float, help="robot size", default=0.3)
+parser.add_argument("--rsize_t", type=float, help="robot size for traversability estimation", default=0.3)
+args = parser.parse_args()
 
-#swopt = 1
-
-image360 = True
+image360 = False
 fisheye = False
 rsense = False
+
+if args.camera == "360":
+    image360 = True
+elif args.camera == "fisheye":
+    fisheye = True
+elif args.camera == "rsense":
+    rsense = True
 
 if image360:
     #for 360 image
@@ -176,10 +178,10 @@ def callback_rsense(msg_1):
         xpgb = timage
 
         #robot size
-        rx_size = 0.3 #for control policy
-        robot_size = rx_size*torch.ones(1, 1, 1, 1).to(device)
-        r_size = 0.3 #for traversability estimation
-        robot_sizef = r_size*torch.ones(1, 1, 1, 1).to(device)
+        #for control policy
+        robot_size = args.rsize*torch.ones(1, 1, 1, 1).to(device)
+        #for traversability estimation
+        robot_sizef = args.rsize_t*torch.ones(1, 1, 1, 1).to(device)
 
 	#initial values for integration
         px = torch.zeros(1).to(device)
@@ -307,10 +309,10 @@ def callback_fisheye(msg_1):
         xpgb = 2.0*(mask_recon_polinet*(0.5*timage+0.5)-0.5)
 
         #robot size
-        rx_size = 0.3 #for control policy
-        robot_size = rx_size*torch.ones(1, 1, 1, 1).to(device)
-        r_size = 0.3 #for traversability estimation
-        robot_sizef = r_size*torch.ones(1, 1, 1, 1).to(device)
+        #for control policy
+        robot_size = args.rsize*torch.ones(1, 1, 1, 1).to(device)
+        #for traversability estimation
+        robot_sizef = args.rsize_t*torch.ones(1, 1, 1, 1).to(device)
 
 	#initial values for integration
         px = torch.zeros(1).to(device)
@@ -443,10 +445,10 @@ def callback_360(msg_1):
         xpgx = torch.cat((xpgf.flip(1), xpgb.flip(1)),axis=1)
 
         #robot size
-        rx_size = 0.3 #for control policy
-        robot_size = rx_size*torch.ones(1, 1, 1, 1).to(device)
-        r_size = 0.3 #for traversability estimation
-        robot_sizef = r_size*torch.ones(1, 1, 1, 1).to(device)
+        #for control policy
+        robot_size = args.rsize*torch.ones(1, 1, 1, 1).to(device)
+        #for traversability estimation
+        robot_sizef = args.rsize_t*torch.ones(1, 1, 1, 1).to(device)
 
         px = torch.zeros(1).to(device)
         pz = torch.zeros(1).to(device)
@@ -573,15 +575,15 @@ if __name__ == '__main__':
 
     #subscribe of topics
     if image360:
-        msg1_sub = rospy.Subscriber('/image_processed2', Image, callback_360, queue_size=1)
-        msg2_sub = rospy.Subscriber('/topoplan/image_ref', Image, callback_ref_360, queue_size=1)
+        msg1_sub = rospy.Subscriber('/topic_name_current_image', Image, callback_360, queue_size=1)
+        msg2_sub = rospy.Subscriber('/topic_name_goal_image', Image, callback_ref_360, queue_size=1)
     elif fisheye:
         #print("kiteruyone??")
-        msg1_sub = rospy.Subscriber('/usb_cam/image_raw', Image, callback_fisheye, queue_size=1)
-        msg2_sub = rospy.Subscriber('/topoplan/image_ref', Image, callback_ref_fisheye, queue_size=1)
+        msg1_sub = rospy.Subscriber('/topic_name_current_image', Image, callback_fisheye, queue_size=1)
+        msg2_sub = rospy.Subscriber('/topic_name_goal_image', Image, callback_ref_fisheye, queue_size=1)
     elif rsense:
-        msg1_sub = rospy.Subscriber('/camera/color/image_raw_throttle', Image, callback_rsense, queue_size=1)
-        msg2_sub = rospy.Subscriber('/topoplan/image_ref', Image, callback_ref_realsense, queue_size=1)
+        msg1_sub = rospy.Subscriber('/topic_name_current_image', Image, callback_rsense, queue_size=1)
+        msg2_sub = rospy.Subscriber('/topic_name_goal_image', Image, callback_ref_realsense, queue_size=1)
 
     #publisher of topics
     msg_out = rospy.Publisher('/cmd_vel', Twist,queue_size=1) #velocities for the robot control
